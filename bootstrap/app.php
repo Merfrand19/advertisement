@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             "/users/*",
             "/login"
         ]);
+        $middleware->alias([
+            'json.response' => \App\Http\Middleware\ForceJsonResponse::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

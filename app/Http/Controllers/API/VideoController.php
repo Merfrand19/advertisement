@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Models\Video;
 use Illuminate\Http\Request;
 
 class VideoController extends Controller
@@ -11,6 +13,7 @@ class VideoController extends Controller
      */
     public function index()
     {
+        //
         return Video::all();
     }
 
@@ -28,24 +31,26 @@ class VideoController extends Controller
         ]);
 
         $video = Video::create($validatedData);
-
+        // Déclenchez l'événement VideoUploaded
+        //event(new VideoUploaded($video));
         return response()->json($video, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Video $video)
     {
-        $video = Video::findOrFail($id);
+        //
         return response()->json($video);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Video $video)
     {
+        // Valider les données de la requête
         $validatedData = $request->validate([
             'nom' => 'string|max:255',
             'url' => 'string|max:255',
@@ -53,21 +58,21 @@ class VideoController extends Controller
             'remuneration' => 'numeric|min:0',
         ]);
 
-        $video = Video::findOrFail($id);
+        // Mettre à jour les données de la vidéo
         $video->update($validatedData);
 
+        // Retourner la vidéo mise à jour
         return response()->json($video, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Video $video)
     {
-        //
-        $video = Video::findOrFail($id);
+        // Supprimer la vidéo
         $video->delete();
+        // Retourner une réponse avec le code 204 (No Content)
         return response()->json(null, 204);
-
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Portefeuille;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -17,8 +18,6 @@ class UserController extends Controller
 
      public function register(Request $request)
     {
-        Log::info('Register Request Data: ', $request->all());
-
         try {
             // Validation des données de la requête
             $validated = $request->validate([
@@ -28,7 +27,7 @@ class UserController extends Controller
                 'password' => 'required|string|min:8',
             ]);
 
-            Log::info('Validated Request Data: ', $validated);
+
             // Création de l'utilisateur
             $user = User::create([
                 'nom' => $request->nom,
@@ -41,6 +40,7 @@ class UserController extends Controller
             $portefeuille->user_id = $user->id;
             $portefeuille->montant = 0;
 
+            $portefeuille->save();
             // Retourne la réponse avec l'utilisateur et le token
             return response()->json([
                 "user" => $user,
